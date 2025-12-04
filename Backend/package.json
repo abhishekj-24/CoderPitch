@@ -1,0 +1,27 @@
+{
+  "name": "day-2",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.11.0",
+    "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "express-router": "^0.0.1",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.17.2",
+    "nodemon": "^3.1.11",
+    "redis": "^5.8.2",
+    "validator": "^13.15.15",
+    "zod": "^4.1.13"
+  },
+  "main": "index.js",
+  "keywords": [],
+  "description": "{\r   \"title\": \"add two numbers\",\r   \"description\": \"Given two numbers, return their sum.\",\r   \"diffuclty\": \"easy\",\r   \"tags\": \"array\",\r   \"visibiletastcase\": [\r     {\r       \"input\": \"1, 2\",\r       \"output\": \"3\",\r       \"explanation\": \"Adding two positive integers\"\r     },\r     {\r       \"input\": \"-5, 10\",\r       \"output\": \"5\",\r       \"explanation\": \"Adding negative and positive number\"\r     },\r     {\r       \"input\": \"0, 0\",\r       \"output\": \"0\",\r       \"explanation\": \"Adding zeros\"\r     }\r   ],\r   \"hiddentastcase\": [\r {\r \"input\": \"1000000000, 2000000000\",\r \"output\": \"3000000000\"\r },\r {\r \"input\": \"-15, -25\",\r \"output\": \"-40\"\r }\r ],\r   \"startcode\": [\r     {\r       \"language\": \"c++\",\r       \"initialcode\": \"#include <iostream>\\nusing namespace std;\\n\\nint main() {\\n    int a, b;\\n    cin >> a >> b;\\n    // Write your code here\\n    return 0;\\n}\"\r     },\r     {\r       \"language\": \"java\",\r       \"initialcode\": \"import java.util.Scanner;\\n\\npublic class Main {\\n    public static void main(String[] args) {\\n        Scanner sc = new Scanner(System.in);\\n        int a = sc.nextInt();\\n        int b = sc.nextInt();\\n        // Write your code here\\n    }\\n}\"\r     },\r     {\r       \"language\": \"javascript\",\r       \"initialcode\": \"process.stdin.on('data', (data) => {\\n    const input = data.toString().split(' ');\\n    const a = parseInt(input[0]);\\n    const b = parseInt(input[1]);\\n    // Write your code here\\n});\"\r     }\r   ],\r   \"referencesol\": [\r     {\r       \"language\": \"c++\",\r       \"completeCode\": \"#include <iostream>\\nusing namespace std;\\n\\nint main() {\\n    int a, b;\\n    cin >> a >> b;\\n    cout << a + b;\\n    return 0;\\n}\"\r     },\r     {\r       \"language\": \"java\",\r       \"completeCode\": \"import java.util.Scanner;\\n\\npublic class Main {\\n    public static void main(String[] args) {\\n        Scanner sc = new Scanner(System.in);\\n        System.out.println(sc.nextInt() + sc.nextInt());\\n    }\\n}\"\r     },\r     {\r       \"language\": \"javascript\",\r       \"completeCode\": \"process.stdin.on('data', (data) => {\\n    const input = data.toString().split(' ').map(Number);\\n    console.log(input[0] + input[1]);\\n});\"\r     }\r   ]\r }"
+}
