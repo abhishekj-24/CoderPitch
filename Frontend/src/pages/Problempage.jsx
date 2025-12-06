@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { Editor } from "@monaco-editor/react";
 import { useParams } from "react-router";
 import SubmissionHistory from "../components/submissionhis";
+import ChatAi from "../components/chatAi";
 
 
 const ProblemPage = ()=>{
@@ -178,7 +179,13 @@ const ProblemPage = ()=>{
             <button className={`tab ${activeLeftTab === 'solution' ? 'tab-active': ''}`}
             onClick={()=> setActiveLeftTab('solution')}>
               Solutions
-            </button>            
+            </button> 
+
+            <button className={`tab ${activeLeftTab === 'ChatAi' ? 'tab-active': ''}`}
+            onClick={()=> setActiveLeftTab('ChatAi')}>
+              AiBot
+            </button> 
+
           </div>
 
           {/* Left Content */}
@@ -253,6 +260,15 @@ const ProblemPage = ()=>{
                   </div>
                 </div>
               )} 
+
+              {activeLeftTab === 'ChatAi' && (
+                <div className="prose max-w-none">
+                  <h2 className="text-xl font-bold mb-4">Chat With Ai</h2>
+                  <div className="whitespace-pre-wrap text-sm leading-relaxed">
+                    {/* <ChatAi></ChatAi> */}
+                  </div>
+                </div>
+              )}
               </>  
             )}
           </div>
