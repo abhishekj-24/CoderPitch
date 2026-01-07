@@ -10,7 +10,7 @@ import ChatAi from "../components/chatAi";
 const ProblemPage = ()=>{
     
     const [problem , setProblem] = useState(null);
-    const [selectedLanguage , setSelectedLanguage] = useState('javascript');
+    const [selectedLanguage , setSelectedLanguage] = useState('cpp');
     const [loading , setLoading] = useState(false);
     const [code, setcode] = useState('');
     const [runresult , setRunResult] = useState(null);
@@ -23,6 +23,12 @@ const ProblemPage = ()=>{
     const {handleSubmit} = useForm();
     // console.log(problemid)
 
+                    const langmap = {
+                    'cpp': 'C++',
+                    'c++': 'C++',
+                    'java': 'Java',
+                    'javascript': 'JavaScript'
+                }
     //fetch Problem Data
     useEffect(()=>{
         const fetchproblem = async ()=>{
@@ -31,17 +37,20 @@ const ProblemPage = ()=>{
             try{
                 
                 const response = await axiosClient.get(`/admin/getproblem/${problemid}`)
-                console.log(response.data)
-                const initialcode = await response.data.startcode.find((sc)=>{
-                    if(sc.language == 'C++' && selectedLanguage == 'cpp')
-                        return true
-                    else if(sc.language == 'Java' && selectedLanguage == 'java')
-                        return true
-                    else if(sc.language == 'Javascript' && selectedLanguage == 'javascript')
-                        return true;
+
+
+                const initialcode = await response.data.startcode.find((sc)=>
+                    // if(sc.language == 'C++' && selectedLanguage == 'cpp')
+                    //     return true
+                    // else if(sc.language == 'Java' && selectedLanguage == 'java')
+                    //     return true
+                    // else if(sc.language == 'JavaScript' && selectedLanguage == 'javascript')
+                    //     return true;
     
-                    return false;
-                })?.initialcode || 'hello'
+                    // else return false;
+                    sc.language === langmap[selectedLanguage.toLowerCase()] || selectedLanguage
+                )?.initialcode || 'hello'
+                console.log(initialcode)
 
                 setProblem(response.data)
 
@@ -62,7 +71,15 @@ const ProblemPage = ()=>{
     //update code when language is change 
     useEffect(()=>{
         if(problem){
-            const initialCode = problem.startcode.find(sc => sc.language === selectedLanguage)?.initialCode || '';
+
+            const langmap = {
+                'cpp': 'C++',
+                'c++': 'C++',
+                'java': 'Java',
+                'javascript': 'JavaScript'
+            };
+
+            const initialCode = problem.startcode.find(sc => sc.language === langmap[selectedLanguage.toLocaleLowerCase()] || selectedLanguage)?.initialcode || '';
             setcode(initialCode)
         }
     },[selectedLanguage, problem])
@@ -265,7 +282,7 @@ const ProblemPage = ()=>{
                 <div className="prose max-w-none">
                   <h2 className="text-xl font-bold mb-4">Chat With Ai</h2>
                   <div className="whitespace-pre-wrap text-sm leading-relaxed">
-                    {/* <ChatAi></ChatAi> */}
+                    <ChatAi problem={problem}></ChatAi>
                   </div>
                 </div>
               )}
@@ -320,6 +337,7 @@ const ProblemPage = ()=>{
                 <div className="flex-1">
                   <Editor
                   height="100%"
+                  key={selectedLanguage}
                   language={getLanguageForMonaco(selectedLanguage)}
                   value={code}
                   onChange={handleEditorChange}

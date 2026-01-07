@@ -8,6 +8,7 @@ const redisclient = require('./config/redis')
 const problemrouter = require('./routes/creat_problem')
 const submitrouter = require('./routes/submit')
 const cors = require('cors')
+const aiRouter = require('./routes/aichat');
 
 app.use(cors({
     origin: 'http://localhost:5173',
@@ -20,6 +21,7 @@ app.use(cookieParser())
 app.use('/user',authRouter)
 app.use('/admin',problemrouter)
 app.use('/submission',submitrouter)
+app.use('/chat',aiRouter)
 
 const Initialize = async ()=>{
     try{

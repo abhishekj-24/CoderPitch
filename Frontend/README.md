@@ -4,7 +4,9 @@ make home page
 make admin page
 
 
-
+bugs in my project: 
+when i submet or run c++ code it give error
+boilerplate code not show
 
 
 

@@ -9,11 +9,11 @@ export default function ChatAi({problem}) {
         {role: 'user', content: 'hi, I am fine'}
     ])
 
-    const {register , handleSbumit, reset, formState: {errors} } = useForm;
+    const {register , handleSubmit, reset, formState: {errors} } = useForm();
     const Endmessageref = useRef(null)
 
     useEffect(()=>{
-        Endmessageref.current?.scrollIntoview({behavior : 'smooth'})
+        Endmessageref.current?.scrollIntoView({behavior : 'smooth'})
     },[message])
 
     const onSubmit = async (data) => {
@@ -22,17 +22,21 @@ export default function ChatAi({problem}) {
 
         try{
             const response = await axiosClient.post('/chat/ai', {
-                message: data.message
+                message: data.message ,
+                title: problem?.title,
+                description: problem?.description,
+                startcode: problem?.startcode,
+                visibiletastcase: problem?.visibiletastcase
             });
 
-            setmessage([...prev, {
+            setmessage((prev) => [...prev, {
                 role: 'model',
                 content: response.data.message || response.data.content
             }])
         }
         catch(error){
             console.error('error occured');
-            setmessage([...prev, {
+            setmessage((prev) => [...prev, {
                 role:'model',
                 content: 'sorry , i encounterd an error'
             }])
@@ -55,7 +59,7 @@ export default function ChatAi({problem}) {
 
           </div>
 
-            <form onSubmit={handleSbumit(onsubmit)}
+            <form onSubmit={handleSubmit(onSubmit)}
             className="sticky bottom-0 p-4 bg-base-100 border-t"
             >
                <div className="flex items-center">
