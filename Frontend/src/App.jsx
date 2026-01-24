@@ -9,6 +9,8 @@ import AdminPanel from './components/AdminPanel'
 import ProblemPage from "./pages/ProblemPage";
 import Admin from './pages/Admin'
 import Admindelete from "./components/Admindelete";
+import UpdateList from "./components/UpdateList";
+import AdminUpdateForm from "./components/AdminUpdate";
 
 
 export default function App(){
@@ -38,6 +40,8 @@ export default function App(){
       <Route path="/admin" element={isAuthenticated && user?.role === "admin" ? <Admin></Admin> : <Navigate to="/"/>}/>
       <Route path="/admin/create" element={isAuthenticated && user.role==='admin' ? <AdminPanel/>: <Navigate to='/'/>}></Route>
       <Route path="/admin/delete" element={isAuthenticated && user.role === 'admin' ? <Admindelete/> : <Navigate to='/'/>}/>
+      <Route path="/admin/update" element={isAuthenticated && user.role === 'admin' ? <UpdateList/> : <Navigate to='/'/>}/>
+      <Route path="/admin/edit-problem/:_id" element={isAuthenticated && user.role === 'admin' ? <AdminUpdateForm/> : <Navigate to='/'/>}/>
       <Route path="/problem/:problemid" element={<ProblemPage></ProblemPage>}></Route>
     </Routes>
   )
