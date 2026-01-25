@@ -48,7 +48,7 @@ const ProblemPage = ()=>{
                     //     return true;
     
                     // else return false;
-                    sc.language === langmap[selectedLanguage.toLowerCase()] || selectedLanguage
+                    sc.language === langmap['cpp']
                 )?.initialcode || 'hello'
                 console.log(initialcode)
 
@@ -79,7 +79,7 @@ const ProblemPage = ()=>{
                 'javascript': 'JavaScript'
             };
 
-            const initialCode = problem.startcode.find(sc => sc.language === langmap[selectedLanguage.toLocaleLowerCase()] || selectedLanguage)?.initialcode || '';
+            const initialCode = problem.startcode.find(sc => sc.language === langmap[selectedLanguage.toLowerCase()])?.initialcode || '';
             setcode(initialCode)
         }
     },[selectedLanguage, problem])
@@ -114,8 +114,11 @@ const ProblemPage = ()=>{
         catch(error){
             console.error('error running code '+ error)
             setRunResult({
-                success : false,
-                error: 'internal server error'
+                success: false,
+                TestcasesPass: [],
+                passedCases: 0,
+                totalCases: 0,
+                errorMessage: error.response?.data?.errorMessage || error.message || 'internal server error'
             });
             setLoading(false)
             setActiveRightTab('testcase')
@@ -404,11 +407,12 @@ const ProblemPage = ()=>{
                     {runresult.success ? (
                       <div>
                         <h4 className="font-bold">✅ All test cases passed!</h4>
-                        <p className="text-sm mt-2">Runtime: {runresult.runtime+" sec"}</p>
+                        <p className="text-sm mt-2">Passed: {runresult.passedCases}/{runresult.totalCases}</p>
+                        <p className="text-sm">Runtime: {runresult.runtime+" sec"}</p>
                         <p className="text-sm">Memory: {runresult.memory+" KB"}</p>
                         
                         <div className="mt-4 space-y-2">
-                          {runresult.TestcasesPass.map((tc, i) => (
+                          {runresult.TestcasesPass && Array.isArray(runresult.TestcasesPass) && runresult.TestcasesPass.map((tc, i) => (
                             <div key={i} className="bg-base-100 p-3 rounded text-xs">
                               <div className="font-mono">
                                 <div><strong>Input:</strong> {tc.stdin}</div>
@@ -424,14 +428,20 @@ const ProblemPage = ()=>{
                       </div>
                     ) : (
                       <div>
-                        <h4 className="font-bold">❌ Error</h4>
+                        <h4 className="font-bold">❌ {runresult.errorMessage ? 'Compilation/Runtime Error' : 'Test Failed'}</h4>
+                        {runresult.errorMessage && (
+                          <div className="mt-2 bg-base-100 p-3 rounded text-xs text-red-600 whitespace-pre-wrap">
+                            <strong>Error:</strong> {runresult.errorMessage}
+                          </div>
+                        )}
+                        <p className="text-sm mt-2">Passed: {runresult.passedCases}/{runresult.totalCases}</p>
                         <div className="mt-4 space-y-2">
-                          {runresult.TestcasesPass.map((tc, i) => (
+                          {runresult.TestcasesPass && Array.isArray(runresult.TestcasesPass) && runresult.TestcasesPass.map((tc, i) => (
                             <div key={i} className="bg-base-100 p-3 rounded text-xs">
                               <div className="font-mono">
                                 <div><strong>Input:</strong> {tc.stdin}</div>
                                 <div><strong>Expected:</strong> {tc.expected_output}</div>
-                                <div><strong>Output:</strong> {tc.stdout}</div>
+                                <div><strong>Output:</strong> {tc.stdout || 'no output'}</div>
                                 <div className={tc.status_id==3 ? 'text-green-600' : 'text-red-600'}>
                                   {tc.status_id==3 ? '✓ Passed' : '✗ Failed'}
                                 </div>

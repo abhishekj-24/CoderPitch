@@ -111,13 +111,17 @@ const runcode = async(req,res)=>{
         const {code, language} = req.body
 
         if(!userId || !problemId || !code || !language)
-            res.status(400).send('some feids are missing')
+            return res.status(400).json({success: false, error: 'some fields are missing'})
 
         //fetch the problem from database 
-        const dsaproblem =await Problem.findById(problemId)
+        const dsaproblem = await Problem.findById(problemId)
+        if(!dsaproblem)
+            return res.status(404).json({success: false, error: 'problem not found'})
 
         //now submit user sol. code to judge0
         const languageId = getlanguageId(language)
+        if(!languageId)
+            return res.status(400).json({success: false, error: 'unsupported language'})
 
         const submissions = dsaproblem.visibiletastcase.map((testcases)=>({
             source_code: code,
@@ -125,9 +129,12 @@ const runcode = async(req,res)=>{
             stdin: testcases.input,
             expected_output: testcases.output
         }))
+        
         const submit_result = await batchsubmission(submissions)
+        if(!submit_result || !Array.isArray(submit_result))
+            return res.status(500).json({success: false, error: 'judge server error'})
 
-        const result_Token = await submit_result.map(value => value.token)
+        const result_Token = submit_result.map(value => value.token)
 
         const test_Result = await submitToken(result_Token)
 
@@ -150,12 +157,11 @@ const runcode = async(req,res)=>{
                 memory = Math.max(memory,test.memory);
             }
             else{
+                status = false;
                 if(test.status_id==4){
-                    status = 'error'
                     errorMessage = test.stderr
                 }
                 else{
-                    status ='wrong';
                     errorMessage = test.stderr
                 }
             }
@@ -165,12 +171,23 @@ const runcode = async(req,res)=>{
             memory,
             runtime,
             TestcasesPass : test_Result,
-            success: status
+            success: status,
+            passedCases: TestcasesPass,
+            totalCases: test_Result.length,
+            errorMessage: errorMessage
         })
 
     }
     catch(err){
-        res.status(500).send('server Error'+err)
+        console.error('Error in runcode:', err)
+        res.status(500).json({
+            success: false,
+            error: 'Server error',
+            TestcasesPass: [],
+            passedCases: 0,
+            totalCases: 0,
+            errorMessage: err.message || 'Unknown error'
+        })
     }
 }
 
