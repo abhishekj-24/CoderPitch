@@ -8,7 +8,7 @@ const solve = async (req , res) => {
 
         async function main(){
             const response = await ai.models.generateContent({
-                model: 'gemini-3-flash-preview',
+                model: 'gemini-3-flash',
                 contents: message,
                 config :{
                     systemInstruction : `

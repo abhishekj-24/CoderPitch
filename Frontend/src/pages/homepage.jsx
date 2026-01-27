@@ -10,6 +10,7 @@ export default function Homepage() {
     const { user } = useSelector(state => state.auth)
     const [Problems, setProblems] = useState([])
     const [SolveProblems, setSolveProblems] = useState([])
+    const [isLoading, setIsLoading] = useState(true)
     const [filter, setFilter] = useState({
         diff: 'all',
         tag: 'all',
@@ -23,6 +24,8 @@ export default function Homepage() {
                 setProblems(data)
             } catch (error) {
                 console.error('fetching error: ' + error)
+            } finally {
+                setIsLoading(false)
             }
         }
 
@@ -196,40 +199,62 @@ return (
 
             {/* problem list */}
             <div className="grid gap-6">
-                {filterproblem.map(problem => (
-                    <div key={problem._id} className="card bg-gray-900/60 backdrop-blur-md border border-gray-700 shadow-2xl hover:shadow-indigo-500/20 hover:border-indigo-500/30 transition-all duration-300 transform hover:-translate-y-1">
-                        <div className="card-body p-6">
-                            <div className="flex items-center justify-between">
-                                <h2 className="card-title text-white text-xl font-bold">
-                                    <NavLink to={`/problem/${problem._id}`} className="hover:text-indigo-400 transition-colors duration-300 flex items-center gap-2">
-                                        <span>💻</span>
-                                        {problem.title}
-                                    </NavLink>
-                                </h2>
-                                {SolveProblems.some(sp => sp._id === problem._id) && (
-                                    <div className="badge badge-success gap-2 px-4 py-3 text-white font-semibold bg-gradient-to-r from-green-500 to-emerald-600 border-0 shadow-lg">
-                                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                                        </svg>
-                                        Solved
+                {isLoading ? (
+                    // Shimmer skeleton loading state
+                    <>
+                        {[1, 2, 3, 4, 5].map((index) => (
+                            <div key={index} className="card bg-gray-900/60 backdrop-blur-md border border-gray-700 shadow-2xl">
+                                <div className="card-body p-6">
+                                    <div className="animate-pulse space-y-4">
+                                        {/* Title shimmer */}
+                                        <div className="h-6 bg-gradient-to-r from-gray-700 via-gray-600 to-gray-700 rounded-lg w-3/4 animate-shimmer"></div>
+                                        
+                                        {/* Badge shimmer */}
+                                        <div className="flex gap-3">
+                                            <div className="h-8 bg-gradient-to-r from-gray-700 via-gray-600 to-gray-700 rounded-full w-24 animate-shimmer"></div>
+                                            <div className="h-8 bg-gradient-to-r from-gray-700 via-gray-600 to-gray-700 rounded-full w-20 animate-shimmer"></div>
+                                        </div>
                                     </div>
-                                )}
+                                </div>
                             </div>
+                        ))}
+                    </>
+                ) : (
+                    // Actual problem list
+                    <>
+                        {filterproblem.map(problem => (
+                            <div key={problem._id} className="card bg-gray-900/60 backdrop-blur-md border border-gray-700 shadow-2xl hover:shadow-indigo-500/20 hover:border-indigo-500/30 transition-all duration-300 transform hover:-translate-y-1">
+                                <div className="card-body p-6">
+                                    <div className="flex items-center justify-between">
+                                        <h2 className="card-title text-white text-xl font-bold">
+                                            <NavLink to={`/problem/${problem._id}`} className="hover:text-indigo-400 transition-colors duration-300 flex items-center gap-2">
+                                                <span>💻</span>
+                                                {problem.title}
+                                            </NavLink>
+                                        </h2>
+                                        {SolveProblems.some(sp => sp._id === problem._id) && (
+                                            <div className="badge badge-success gap-2 px-4 py-3 text-white font-semibold bg-gradient-to-r from-green-500 to-emerald-600 border-0 shadow-lg">
+                                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                                                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                                </svg>
+                                                Solved
+                                            </div>
+                                        )}
+                                    </div>
 
-                            <div className="flex gap-3 mt-4">
-                                <div className={`badge px-4 py-3 font-bold text-white border-0 shadow-lg ${Diffucltybadgecolor(problem. diffuclty)}`}>
-                                    {problem. diffuclty === 'easy'}
-                                    {problem. diffuclty === 'medium'}
-                                    {problem. diffuclty === 'hard'}
-                                    {problem. diffuclty?.charAt(0).toUpperCase() + problem. diffuclty?.slice(1)}
-                                </div>
-                                <div className="badge badge-info px-4 py-3 font-semibold text-white bg-gradient-to-r from-blue-500 to-cyan-600 border-0 shadow-lg">
-                                    🏷️ {problem.tags}
+                                    <div className="flex gap-3 mt-4">
+                                        <div className={`badge px-4 py-3 font-bold text-white border-0 shadow-lg ${Diffucltybadgecolor(problem.diffuclty)}`}>
+                                            {problem.diffuclty?.charAt(0).toUpperCase() + problem.diffuclty?.slice(1)}
+                                        </div>
+                                        <div className="badge badge-info px-4 py-3 font-semibold text-white bg-gradient-to-r from-blue-500 to-cyan-600 border-0 shadow-lg">
+                                            🏷️ {problem.tags}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                ))}
+                        ))}
+                    </>
+                )}
             </div>
         </div>
     </div>

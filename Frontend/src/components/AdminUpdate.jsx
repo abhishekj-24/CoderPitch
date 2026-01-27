@@ -42,9 +42,11 @@ export default function AdminUpdateForm() {
     const { _id } = useParams(); // Get ID from URL
     const navigate = useNavigate();
     const [isLoading, setIsLoading] = useState(true);
+    const [submitError, setSubmitError] = useState('');
 
     const { register, control, handleSubmit, reset, formState: { errors } } = useForm({
         resolver: zodResolver(problemSchema),
+        mode: 'onBlur' // Only validate on blur to be less strict
     });
 
     const { fields: Visiblefields, append: appendVisible, remove: removeVisible } = useFieldArray({
@@ -75,14 +77,21 @@ export default function AdminUpdateForm() {
     }, [_id, reset, navigate]);
 
     const onSubmit = async (data) => {
+        setSubmitError('');
         try {
-            // API ROUTE: Change this to your "Update" endpoint (usually PUT or PATCH)
-            console.log("hello")
-            await axiosClient.put(`/admin/update/${_id}`, data);
+            console.log("Form data being sent:", data);
+            console.log("Update URL:", `/admin/update/${_id}`);
+            const response = await axiosClient.put(`/admin/update/${_id}`, data);
+            console.log("Update response:", response.data);
             alert('Problem updated successfully');
             navigate('/admin/update'); // Redirect to the list page
         } catch (error) {
-            alert(`Error: ${error.response?.data?.message || error.message}`);
+            console.error("Update error details:", error);
+            console.error("Error response:", error.response?.data);
+            console.error("Error message:", error.message);
+            const errorMsg = error.response?.data?.message || error.message || 'Failed to update problem';
+            setSubmitError(errorMsg);
+            alert(`Error: ${errorMsg}`);
         }
     };
 
@@ -94,6 +103,11 @@ export default function AdminUpdateForm() {
         );
     }
 
+    // Debug: Log validation errors
+    if (Object.keys(errors).length > 0) {
+        console.warn("Form validation errors:", errors);
+    }
+
     return (
         <div className="container mx-auto p-6 max-w-5xl">
             <div className="flex items-center gap-4 mb-8">
@@ -103,6 +117,13 @@ export default function AdminUpdateForm() {
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
                 
+                {/* Error Alert */}
+                {submitError && (
+                    <div className="alert alert-error">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 14l-2-2m0 0l-2-2m2 2l2-2m-2 2l-2 2m8-8v2m0 4v2m0 4v2" /></svg>
+                        <span>{submitError}</span>
+                    </div>
+                )}
                 {/* Section 1: Basic Info */}
                 <section className="card bg-base-200 shadow-xl overflow-visible">
                     <div className="card-body">

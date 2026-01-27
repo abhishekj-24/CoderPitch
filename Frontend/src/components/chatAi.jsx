@@ -38,7 +38,7 @@ export default function ChatAi({problem}) {
             console.error('error occured');
             setmessage((prev) => [...prev, {
                 role:'model',
-                content: 'sorry , i encounterd an error'
+                content: error || 'sorry , i encounterd an error'
             }])
         }
     }
