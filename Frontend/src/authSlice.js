@@ -36,7 +36,7 @@ export const checkUser = createAsyncThunk(
             return response.data.user
         }
         catch(error){
-            return rejectWithValue(error)
+            return rejectWithValue(error.message)
         }
     }
 )

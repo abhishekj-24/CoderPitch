@@ -1,4 +1,3 @@
-const { GEO_REPLY_WITH } = require('redis')
 const redisclient = require('../config/redis')
 const User = require('../models/user')
 const validat = require('../utils/validate')
@@ -40,7 +39,7 @@ const register = async (req,res)=>{
         })
    }
    catch(err){
-    res.status(400).send(err)
+    res.status(400).send(err.message) // messege -> message 
    }
 }
 
@@ -49,7 +48,7 @@ const login = async (req,res)=>{
         const {emailid, password} = req.body
         
         if(!emailid)
-            throw new Error('invalid cradentls')
+            throw new Error('Email is required')
         
         if(!password)
             throw new Error('invalid cradentials')
@@ -58,7 +57,10 @@ const login = async (req,res)=>{
         const match = await bcrypt.compare(password, user.password)
         
         if(!match)
-            throw new Error('wornd passowrd')
+            // throw new Error('wornd passowrd')
+            res.status(401).json({
+                message: "Invalid email or password"
+            });
 
         const reply = {
             firstname: user.firstname,

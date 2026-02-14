@@ -3,7 +3,8 @@ const User = require('../models/user')
 const express = require('express')
 
 
-const validat = async (data)=>{
+// const validat = async (data)=>{  // no need to async as there is no await funciton 
+const validat = (data)=>{  
     const mendatory = ['firstname','emailid', 'password']
      
     const Isallowed = mendatory.every((k)=> Object.keys(data).includes(k))
