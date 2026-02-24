@@ -9,6 +9,7 @@ const problemrouter = require('./routes/creat_problem')
 const submitrouter = require('./routes/submit')
 const cors = require('cors')
 const aiRouter = require('./routes/aichat');
+const videoRouter = require('./routes/video_create')
 
 app.use(cors({
     origin: 'http://localhost:5173',
@@ -22,6 +23,7 @@ app.use('/user',authRouter)
 app.use('/admin',problemrouter)
 app.use('/submission',submitrouter)
 app.use('/chat',aiRouter)
+app.use("/video",videoRouter);
 
 const Initialize = async ()=>{
     try{

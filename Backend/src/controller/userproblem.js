@@ -2,6 +2,7 @@ const Problem = require('../models/problem')
 const User = require('../models/user')
 const submissions = require('../models/submission')
 const {getlanguageId, batchsubmission,submitToken} = require('../utils/problemutil')
+const solvideo = require('../models/viedeo');
 
 const creatPorblem = async (req,res)=>{
     console.log("submit_result")
@@ -129,9 +130,22 @@ const getproblembyid = async (req,res)=>{
         const Dsaproblem = await Problem.findById(id).select('-hiddentastcase -probcreater -createdAt -updatedAt -__v')
 
         if(!Dsaproblem)
-            res.send('problem is not available')
+            res.status(404).send('problem is not available')
 
-        res.send(Dsaproblem)
+        //video ka url wagera le aao
+        const video = await solvideo.find({problemId:id})
+
+        if(video){
+
+            Dsaproblem.secureUrl = secureUrl;
+            Dsaproblem.coudinarypubId = coudinarypubId;
+            Dsaproblem.thumbnailUrl = thumbnailUrl;
+            Dsaproblem.duration = duration;
+
+            return res.status(200).send(Dsaproblem);
+        }
+
+        res.startcode(200).send(Dsaproblem)
     }
     catch(error){
         res.send('error '+error)

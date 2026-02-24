@@ -439,9 +439,9 @@ const ProblemPage = ()=>{
                           {runresult.TestcasesPass && Array.isArray(runresult.TestcasesPass) && runresult.TestcasesPass.map((tc, i) => (
                             <div key={i} className="bg-base-100 p-3 rounded text-xs">
                               <div className="font-mono">
-                                <div><strong>Input:</strong> {tc.stdin}</div>
-                                <div><strong>Expected:</strong> {tc.expected_output}</div>
-                                <div><strong>Output:</strong> {tc.stdout || 'no output'}</div>
+                                <div className="text-white"><strong>Input:</strong> {tc.stdin}</div>
+                                <div className="text-white"><strong>Expected:</strong> {tc.expected_output}</div>
+                                <div className="text-white"><strong>Output:</strong> {tc.stdout || 'no output'}</div>
                                 <div className={tc.status_id==3 ? 'text-green-600' : 'text-red-600'}>
                                   {tc.status_id==3 ? '✓ Passed' : '✗ Failed'}
                                 </div>
