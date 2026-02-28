@@ -133,22 +133,24 @@ const getproblembyid = async (req,res)=>{
             res.status(404).send('problem is not available')
 
         //video ka url wagera le aao
-        const video = await solvideo.find({problemId:id})
+        const video = await solvideo.findOne({problemId:id})
 
         if(video){
 
-            Dsaproblem.secureUrl = secureUrl;
-            Dsaproblem.coudinarypubId = coudinarypubId;
-            Dsaproblem.thumbnailUrl = thumbnailUrl;
-            Dsaproblem.duration = duration;
-
-            return res.status(200).send(Dsaproblem);
+            const responseData ={
+                ...Dsaproblem.toObject(),
+                secureUrl : video.secureUrl,
+                coudinarypubId : video.coudinarypubId,
+                thumbnailUrl : video.thumbnailUrl,
+                duration : video.duration
+            }
+            return res.status(200).send(responseData);
         }
 
-        res.startcode(200).send(Dsaproblem)
+        res.status(200).send(Dsaproblem)
     }
     catch(error){
-        res.send('error '+error)
+        res.status(500).send('error '+error)
     }
 }
 

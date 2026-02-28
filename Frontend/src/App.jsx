@@ -11,6 +11,8 @@ import Admin from './pages/Admin'
 import Admindelete from "./components/Admindelete";
 import UpdateList from "./components/UpdateList";
 import AdminUpdateForm from "./components/AdminUpdate";
+import AdminVideo from "./components/AdminVideo";
+import AdminUpload from "./components/AdminUpload";
 
 
 export default function App(){
@@ -42,6 +44,8 @@ export default function App(){
       <Route path="/admin/delete" element={isAuthenticated && user.role === 'admin' ? <Admindelete/> : <Navigate to='/'/>}/>
       <Route path="/admin/update" element={isAuthenticated && user.role === 'admin' ? <UpdateList/> : <Navigate to='/'/>}/>
       <Route path="/admin/edit-problem/:_id" element={isAuthenticated && user.role === 'admin' ? <AdminUpdateForm/> : <Navigate to='/'/>}/>
+      <Route path="/admin/video" element={isAuthenticated && user.role === 'admin' ? <AdminVideo/> : <Navigate to='/'/>}/>
+      <Route path="/admin/upload/:problemId" element={isAuthenticated && user.role === 'admin' ? <AdminUpload/> : <Navigate to='/'/>}/>
       <Route path="/problem/:problemid" element={<ProblemPage></ProblemPage>}></Route>
     </Routes>
   )

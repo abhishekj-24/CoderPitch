@@ -1,5 +1,5 @@
 import react ,{useState} from 'react'
-import { Plus, Edit, Trash2, Home , RefreshCcw,Zap, Trash } from 'lucide-react'
+import { Plus, Edit, Trash2, Home , RefreshCcw,Video , Trash } from 'lucide-react'
 import { NavLink } from 'react-router'
 
 function Admin(){
@@ -34,6 +34,16 @@ function Admin(){
             color: 'btn-error',
             bgColor: 'bg-error/10',
             route: '/admin/delete'
+        },
+
+        {
+            id: 'video',
+            title: 'vedeo problem',
+            description: 'delete and upload video',
+            icon: Video ,
+            color: 'btn-error',
+            bgColor: 'bg-error/10',
+            route: '/admin/video'
         }
     ]
 
