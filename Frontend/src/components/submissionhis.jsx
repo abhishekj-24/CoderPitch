@@ -12,7 +12,7 @@ const SubmissionHistory = ({problemId}) =>{
             try{
                 setloading(true)
                 const response = await axiosClient.get(`/admin/submitedproblem/${problemId}`)
-                setsubmissions(response.data)
+                setsubmissions(Array.isArray(response.data) ? response.data : [])
                 seterror(null)
             }
             catch(err){
@@ -70,7 +70,7 @@ const SubmissionHistory = ({problemId}) =>{
     <div className="container mx-auto p-4">
       <h2 className="text-2xl font-bold text-center mb-6">Submission history</h2>
 
-      {submissions.length ===0 ? (
+      {(submissions && submissions.length === 0) ? (
         <div className="alert alert-info shadow-lg">
           <div>
             <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
@@ -99,16 +99,16 @@ const SubmissionHistory = ({problemId}) =>{
               {submissions.map((sub, index)=>(
                 <tr key={sub._id}>
                   <td>{index +1}</td>
-                  <td className="font-mono">{sub.language}</td>
+                  <td className="font-mono">{sub.language || '-'}</td>
                   <td>
                     <span className={`badge ${getStatuscolor(sub.status)} w-16`}>
-                      {sub.status.charAt(0).toUpperCase() + sub.status.slice(1)}
+                      {(sub.status || '').charAt(0).toUpperCase() + (sub.status || '').slice(1)}
                     </span>
                   </td>
-                  <td className="font-mono">{sub.runtime}</td>
-                  <td>{formateMemory(sub.memory)}</td>
-                  <td>{sub.TestcasesPass}</td>
-                  <td>{formatDate(sub.createdAt)}</td>
+                  <td className="font-mono">{sub.runtime != null ? sub.runtime : '-'}</td>
+                  <td>{sub.memory!=null ? formateMemory(sub.memory) : '-'}</td>
+                  <td>{sub.TestcasesPass != null ? sub.TestcasesPass : '-'}</td>
+                  <td>{sub.createdAt ? formatDate(sub.createdAt) : '-'}</td>
                   <td>
                     <button className="btn btn-sm btn-outline" onClick={() => setselectSubmission(sub)}>
                       Code

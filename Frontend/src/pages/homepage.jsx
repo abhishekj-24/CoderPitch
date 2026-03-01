@@ -69,6 +69,7 @@ return (
                         {user?.firstname}
                     </div>
                     <ul className="mt-3 p-2 menu menu-sm dropdown-content bg-gray-900/90 backdrop-blur-md border border-gray-700 rounded-box w-52 shadow-2xl">
+                        <li><NavLink to='/profile' className="text-white hover:bg-indigo-500/20 hover:text-indigo-400 transition-colors">Profile</NavLink></li>
                         <li><button onClick={handleLogout} className="text-white hover:bg-red-500/20 hover:text-red-400 transition-colors">Logout</button></li>
                         {user?.role == 'admin' && <li><NavLink to='/admin' className="text-white hover:bg-indigo-500/20 hover:text-indigo-400 transition-colors">Admin</NavLink></li>}
                     </ul>

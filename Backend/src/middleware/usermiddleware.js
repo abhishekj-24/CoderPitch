@@ -31,7 +31,8 @@ const usermiddleware = async (req,res,next)=>{
 
     }
     catch(err){
-        res.send("error ouured"+err)
+        console.error('usermiddleware error', err)
+        res.status(500).json({ error: 'Server error in auth middleware' })
     }
 }
 

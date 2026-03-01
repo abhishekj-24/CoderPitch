@@ -6,13 +6,14 @@ import {checkUser} from './authSlice'
 import { useDispatch,useSelector} from "react-redux";
 import { useEffect } from "react";
 import AdminPanel from './components/AdminPanel'
-import ProblemPage from "./pages/ProblemPage";
+import ProblemPage from "./pages/Problempage";
 import Admin from './pages/Admin'
 import Admindelete from "./components/Admindelete";
 import UpdateList from "./components/UpdateList";
 import AdminUpdateForm from "./components/AdminUpdate";
 import AdminVideo from "./components/AdminVideo";
 import AdminUpload from "./components/AdminUpload";
+import Profile from "./pages/Profile";
 
 
 export default function App(){
@@ -47,6 +48,7 @@ export default function App(){
       <Route path="/admin/video" element={isAuthenticated && user.role === 'admin' ? <AdminVideo/> : <Navigate to='/'/>}/>
       <Route path="/admin/upload/:problemId" element={isAuthenticated && user.role === 'admin' ? <AdminUpload/> : <Navigate to='/'/>}/>
       <Route path="/problem/:problemid" element={<ProblemPage></ProblemPage>}></Route>
+      <Route path="/profile" element={isAuthenticated ? <Profile/> : <Navigate to='/login'/>} />
     </Routes>
   )
 }

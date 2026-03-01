@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const Submission = require('../models/submission')
 const { email } = require('zod')
+const Problem = require('../models/problem')
 
 
 const register = async (req,res)=>{
@@ -148,5 +149,48 @@ const userdelete = async(req,res)=>{
     }
 }
 
+// return profile statistics for authenticated user
+const getUserProfile = async (req, res) => {
+    try {
+        const userId = req.result._id;
+        // aggregate solved problems by difficulty
+        const stats = await Submission.aggregate([
+            { $match: { userId: userId, status: 'accepted' } },
+            { $lookup: {
+                from: 'problems',
+                localField: 'problemId',
+                foreignField: '_id',
+                as: 'problem'
+            }},
+            { $unwind: '$problem' },
+            { $group: { _id: '$problem.diffuclty', count: { $sum: 1 } } }
+        ]);
+        const solvedIds = await Submission.distinct('problemId', { userId: userId, status: 'accepted' });
+        const totalSolved = solvedIds.length;
+        // fetch basic problem info for solved list
+        const solvedProblems = await Problem.find({ _id: { $in: solvedIds } })
+            .select('_id title diffuclty tags');
 
-module.exports={register, login, logout, adminregiter, userdelete}
+        // compute additional community stats
+        const totalSubmissions = await Submission.countDocuments({ userId: userId });
+        // estimate views as solved count * 50 (placeholder until proper tracking exists)
+        const estimatedViews = totalSolved * 50;
+        // simple reputation heuristic: 10 points per solved + 1 point per 5 submissions
+        const reputation = totalSolved * 10 + Math.floor(totalSubmissions / 5);
+
+        const communityStats = {
+            views: estimatedViews,
+            solutions: totalSolved,
+            discussions: totalSubmissions,
+            reputation
+        };
+
+        res.json({ stats, totalSolved, solvedProblems, communityStats });
+    } catch (err) {
+        console.error('getUserProfile error', err);
+        res.status(500).json({ error: 'Failed to fetch profile stats' });
+    }
+}
+
+
+module.exports={register, login, logout, adminregiter, userdelete, getUserProfile}
