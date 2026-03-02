@@ -38,7 +38,7 @@ const creatPorblem = async (req,res)=>{
             for(const test of test_Result){
                 
                 if(test.status_id !=3)
-                    res.send('Error occured')
+                    return res.send('Error occured')
             }
 
         }
