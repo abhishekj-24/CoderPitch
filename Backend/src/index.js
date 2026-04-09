@@ -12,7 +12,7 @@ const aiRouter = require('./routes/aichat');
 const videoRouter = require('./routes/video_create')
 
 app.use(cors({
-    origin: 'http://localhost:5175',
+    origin: 'http://localhost:5173',
     credentials:true
 }))
 
